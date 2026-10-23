@@ -13,11 +13,22 @@ $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
 $publish = Join-Path $root "publish"
 
+# publish klasöründen çalışan örnek exe'yi kilitler ve publish üzerine yazamaz: önce kapat.
+$running = Get-Process -Name EkranSecici -ErrorAction SilentlyContinue |
+    Where-Object { $_.Path -and $_.Path.StartsWith($publish, [StringComparison]::OrdinalIgnoreCase) }
+if ($running) {
+    Write-Host "==> publish klasöründen çalışan Ekran Seçici kapatılıyor"
+    & (Join-Path $publish "EkranSecici.exe") --exit
+    $running | ForEach-Object { if (-not $_.WaitForExit(5000)) { Stop-Process -Id $_.Id -Force } }
+}
+
 Write-Host "==> Publish (win-x64, self-contained, tek dosya) - sürüm $Version"
 dotnet publish "$root/src/EkranSecici/EkranSecici.csproj" -c Release -r win-x64 --self-contained true `
     -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true `
     -p:DebugType=none -p:Version=$Version -o $publish
-if ($LASTEXITCODE -ne 0) { throw "dotnet publish başarısız" }
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet publish başarısız. Yukarıdaki kırmızı 'error' satırına bakın (EkranSecici.exe başka bir yerden açık olabilir)."
+}
 
 $iscc = @(
     (Get-Command iscc -ErrorAction SilentlyContinue).Source,
