@@ -21,6 +21,7 @@ internal sealed class ProfileEditorForm : Form
     private readonly TextBox _workDir = new();
     private readonly ComboBox _monitor = new() { DropDownStyle = ComboBoxStyle.DropDownList };
     private readonly ComboBox _mode = new() { DropDownStyle = ComboBoxStyle.DropDownList };
+    private readonly CheckBox _enabled = new() { Text = "Profil aktif (pasif profil başlatılmaz, silinmez)", AutoSize = true };
     private readonly CheckBox _sendF11 = new() { Text = "Tam ekran için F11 tuşu gönder (tarayıcılar, --kiosk kullanmıyorsanız)", AutoSize = true };
     private readonly CheckBox _topMost = new() { Text = "Her zaman üstte", AutoSize = true };
     private readonly CheckBox _autoStart = new() { Text = "Windows açılışında otomatik başlat", AutoSize = true };
@@ -78,6 +79,7 @@ internal sealed class ProfileEditorForm : Form
         monitorButtons.Controls.AddRange(new Control[] { identify, refresh });
 
         AddRow(grid, "Profil adı:", _name);
+        AddRow(grid, "", _enabled);
         AddRow(grid, "Program (exe):", _exe, browse);
         AddRow(grid, "Parametreler:", _args);
         AddHint(grid, "Örn. Firefox: -no-remote -profile \"%APPDATA%\\EkranSecici\\FirefoxCagri\" --kiosk \"https://adres\"");
@@ -149,6 +151,7 @@ internal sealed class ProfileEditorForm : Form
     private void LoadFrom(LaunchProfile p)
     {
         _name.Text = p.Name;
+        _enabled.Checked = p.Enabled;
         _exe.Text = p.ExePath;
         _args.Text = p.Arguments;
         _workDir.Text = p.WorkingDirectory;
@@ -168,6 +171,7 @@ internal sealed class ProfileEditorForm : Form
     private void ReadInto(LaunchProfile p)
     {
         p.Name = _name.Text.Trim();
+        p.Enabled = _enabled.Checked;
         p.ExePath = _exe.Text.Trim();
         p.Arguments = _args.Text.Trim();
         p.WorkingDirectory = _workDir.Text.Trim();
@@ -301,6 +305,7 @@ internal sealed class ProfileEditorForm : Form
 
         var temp = _profile.Clone();
         ReadInto(temp);
+        temp.Enabled = true; // Test, pasif profilde de çalışsın
         button.Enabled = false;
         UseWaitCursor = true;
         try

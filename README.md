@@ -10,6 +10,7 @@ Firefox'taki **hasta çağrı ekranı** tam ekran açık kalır. PC açılınca 
 
 - Sağ alt köşede (bildirim alanı) simge olarak arka planda çalışır; **tıklayınca** ayar ekranı açılır.
 - Her program için ayrı **profil**: program yolu, parametreler, hedef monitör, pencere modu.
+- Profiller **aktif/pasif** yapılabilir: pasif profil silinmeden devre dışı kalır.
 - **Pencere modları:** Normal pencere · Ekranı kapla (maximize) · Tam ekran (kenarlıksız veya F11).
 - **Windows açılışında otomatik başlatma** (hem Ekran Seçici hem de seçilen profiller için ayrı ayrı).
 - **Monitörde tut:** Pencere yanlışlıkla diğer ekrana sürüklenirse geri getirilir.
@@ -70,6 +71,7 @@ Profil seçenekleri:
 
 | Seçenek | Açıklama |
 |---|---|
+| Profil aktif | İşaretsizse profil pasiftir: açılışta, "Tümünü başlat"ta ve bekçide atlanır; silinmez. Listede soldaki kutu veya **Aktif / Pasif** düğmesiyle de değiştirilir. Pasif yapılan profilin açık penceresi kapatılmaz, yalnızca izlenmez. |
 | Monitör | Hedef ekran. 1 = ana monitör, diğerleri soldan sağa. |
 | Pencere modu | Normal pencere / Ekranı kapla / Tam ekran |
 | F11 gönder | Tam ekranı programın kendi F11 kısayoluyla yapar (tarayıcılar). |

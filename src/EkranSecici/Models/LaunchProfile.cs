@@ -15,6 +15,8 @@ public sealed class LaunchProfile
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = "";
+    /// <summary>Pasif profil hiçbir şekilde başlatılmaz/izlenmez; silmeden devre dışı bırakmak için.</summary>
+    public bool Enabled { get; set; } = true;
     public string ExePath { get; set; } = "";
     public string Arguments { get; set; } = "";
     public string WorkingDirectory { get; set; } = "";

@@ -78,7 +78,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         menu.Items.Add(open);
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_profilesMenu);
-        menu.Items.Add("Tümünü başlat / konumla", null, async (_, _) => await StartProfilesAsync(_store.Config.Profiles, showErrors: true));
+        menu.Items.Add("Tümünü başlat / konumla", null, async (_, _) => await StartProfilesAsync(_store.Config.Profiles.Where(p => p.Enabled), showErrors: true));
         menu.Items.Add("Monitörleri tanımla", null, (_, _) => MonitorIdentifyForm.ShowAll());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Çıkış", null, (_, _) => ExitApplication());
@@ -88,9 +88,12 @@ internal sealed class TrayApplicationContext : ApplicationContext
             _profilesMenu.DropDownItems.Clear();
             foreach (var p in _store.Config.Profiles)
             {
-                var item = new ToolStripMenuItem($"{p.Name}  ({MonitorService.Describe(p)}, {LaunchProfile.ModeText(p.WindowMode)})")
+                var item = new ToolStripMenuItem(p.Enabled
+                    ? $"{p.Name}  ({MonitorService.Describe(p)}, {LaunchProfile.ModeText(p.WindowMode)})"
+                    : $"{p.Name}  (pasif)")
                 {
                     Checked = _launcher.IsRunning(p),
+                    Enabled = p.Enabled,
                 };
                 item.Click += async (_, _) => await StartProfilesAsync(new[] { p }, showErrors: true);
                 _profilesMenu.DropDownItems.Add(item);
@@ -109,7 +112,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         try
         {
             var config = _store.Config;
-            var profiles = config.Profiles.Where(p => p.AutoStart).ToList();
+            var profiles = config.Profiles.Where(p => p.Enabled && p.AutoStart).ToList();
             if (profiles.Count == 0) return;
 
             await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, config.StartupDelaySeconds)));
@@ -159,7 +162,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private void WatchdogTick()
     {
         if (_startupRunning) return;
-        foreach (var p in _store.Config.Profiles.ToList())
+        foreach (var p in _store.Config.Profiles.Where(p => p.Enabled).ToList())
         {
             if (p.RestartIfClosed && _launcher.ShouldRestart(p))
             {

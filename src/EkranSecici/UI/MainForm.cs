@@ -17,6 +17,7 @@ internal sealed class MainForm : Form
         MultiSelect = false,
         HideSelection = false,
         Dock = DockStyle.Fill,
+        CheckBoxes = true, // işaret = profil aktif
     };
     private readonly CheckBox _startWithWindows = new() { Text = "Windows açılışında Ekran Seçici'yi otomatik başlat", AutoSize = true };
     private readonly NumericUpDown _startupDelay = new() { Minimum = 0, Maximum = 600, Width = 70 };
@@ -24,6 +25,8 @@ internal sealed class MainForm : Form
     private readonly System.Windows.Forms.Timer _refreshTimer = new() { Interval = 2000 };
     private readonly Button[] _selectionButtons;
     private bool _loading;
+    private bool _refreshingList;
+    private bool _doubleClicking;
 
     /// <summary>Uygulamadan tamamen çıkılırken true yapılır; aksi halde kapatma = gizleme.</summary>
     public bool AllowClose { get; set; }
@@ -51,21 +54,34 @@ internal sealed class MainForm : Form
         _list.Columns.Add("Durum", 90);
         _list.DoubleClick += (_, _) => EditSelected();
         _list.SelectedIndexChanged += (_, _) => UpdateButtons();
+        // ListView çift tıklamada kutuyu da değiştirir; çift tıklama yalnızca düzenlemeyi açsın.
+        _list.MouseDown += (_, e) => _doubleClicking = e.Clicks > 1;
+        _list.MouseUp += (_, _) => _doubleClicking = false;
+        _list.ItemCheck += (_, e) =>
+        {
+            if (_doubleClicking) e.NewValue = e.CurrentValue;
+        };
+        _list.ItemChecked += (_, e) =>
+        {
+            if (!_refreshingList && e.Item.Tag is LaunchProfile p) SetEnabled(p, e.Item.Checked);
+        };
 
         var add = MakeButton("Yeni profil", (_, _) => AddProfile());
         var edit = MakeButton("Düzenle", (_, _) => EditSelected());
+        var toggle = MakeButton("Aktif / Pasif", (_, _) => { if (Selected is { } p) SetEnabled(p, !p.Enabled); });
         var remove = MakeButton("Sil", (_, _) => RemoveSelected());
         var start = MakeButton("Başlat / Konumla", async (_, _) => await StartSelectedAsync());
         var startAll = MakeButton("Tümünü başlat", async (_, _) => await StartAllAsync());
         var identify = MakeButton("Monitörleri tanımla", (_, _) => MonitorIdentifyForm.ShowAll());
-        _selectionButtons = new[] { edit, remove, start };
+        _selectionButtons = new[] { edit, toggle, remove, start };
 
         var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, Margin = new Padding(0, 6, 0, 6) };
-        buttons.Controls.AddRange(new Control[] { add, edit, remove, start, startAll, identify });
+        buttons.Controls.AddRange(new Control[] { add, edit, toggle, remove, start, startAll, identify });
 
         var header = new Label
         {
             Text = "Programların hangi monitörde ve hangi modda açılacağını belirleyin. " +
+                   "Soldaki kutu işaretli değilse profil pasiftir (başlatılmaz, silinmez). " +
                    "Pencereyi kapatınca program sağ alttaki simgede çalışmaya devam eder.",
             AutoSize = true,
             MaximumSize = new Size(860, 0),
@@ -186,11 +202,17 @@ internal sealed class MainForm : Form
     private void RefreshList()
     {
         var selectedId = Selected?.Id;
+        _refreshingList = true;
         _list.BeginUpdate();
         _list.Items.Clear();
         foreach (var p in _store.Config.Profiles)
         {
-            var item = new ListViewItem(p.Name) { Tag = p };
+            var item = new ListViewItem(p.Name)
+            {
+                Tag = p,
+                Checked = p.Enabled,
+                ForeColor = p.Enabled ? SystemColors.WindowText : SystemColors.GrayText,
+            };
             item.SubItems.Add(Path.GetFileName(p.ExePath.Trim('"')));
             item.SubItems.Add(MonitorService.Describe(p));
             item.SubItems.Add(LaunchProfile.ModeText(p.WindowMode));
@@ -201,6 +223,7 @@ internal sealed class MainForm : Form
         }
         if (_list.SelectedItems.Count == 0 && _list.Items.Count > 0) _list.Items[0].Selected = true;
         _list.EndUpdate();
+        _refreshingList = false;
         UpdateButtons();
     }
 
@@ -215,6 +238,7 @@ internal sealed class MainForm : Form
     }
 
     private string StatusText(LaunchProfile p) =>
+        !p.Enabled ? (_launcher.IsRunning(p) ? "Pasif (açık)" : "Pasif") :
         _launcher.IsBusy(p) ? "Başlatılıyor…" : _launcher.IsRunning(p) ? "Açık" : "—";
 
     private void AddProfile()
@@ -234,6 +258,7 @@ internal sealed class MainForm : Form
         var index = _store.Config.Profiles.IndexOf(p);
         if (index < 0) return;
         _store.Config.Profiles[index] = dlg.Result;
+        if (!dlg.Result.Enabled) _launcher.Forget(p.Id);
         Save();
         RefreshList();
     }
@@ -245,6 +270,17 @@ internal sealed class MainForm : Form
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
         _store.Config.Profiles.Remove(p);
         _launcher.Forget(p.Id);
+        Save();
+        RefreshList();
+    }
+
+    private void SetEnabled(LaunchProfile p, bool enabled)
+    {
+        if (p.Enabled == enabled) return;
+        p.Enabled = enabled;
+        // Pasif yapılınca açık programı kapatmıyoruz; yalnızca izlemeyi bırakıyoruz (yeniden başlatma/konumlama yok).
+        if (!enabled) _launcher.Forget(p.Id);
+        Log.Info($"'{p.Name}' {(enabled ? "aktif" : "pasif")} yapıldı");
         Save();
         RefreshList();
     }
@@ -261,7 +297,7 @@ internal sealed class MainForm : Form
     private async Task StartAllAsync()
     {
         var errors = new List<string>();
-        foreach (var p in _store.Config.Profiles.ToList())
+        foreach (var p in _store.Config.Profiles.Where(p => p.Enabled).ToList())
         {
             RefreshStatusSoon();
             var error = await _launcher.StartOrPlaceAsync(p);

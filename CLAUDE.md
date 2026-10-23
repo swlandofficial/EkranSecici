@@ -81,7 +81,10 @@ UI tamamen kodla kuruluyor (Designer dosyası yok). Yeni form eklerken aynı sti
    `AlwaysOnTop` profillerinde `HWND_TOPMOST` her turda yeniden uygulanır (bayrak varken bile — başka en-üstte
    pencereler sırayı değiştirebilir). (Yeniden) başlatılan `AlwaysOnTop` penceresi ayrıca öne getirilir ve odak
    personelin penceresine iade edilir; aksi halde Windows yeni pencereyi arkada açabilir.
-6. **Ekran ayarı değişince** (`SystemEvents.DisplaySettingsChanged`, ör. dış ekran sonradan açıldı): takip edilen tüm
+6. **Pasif profiller** (`Enabled=false`): açılışta, "Tümünü başlat"ta, bekçide ve ekran değişikliğinde atlanır;
+   `StartOrPlaceAsync` hata mesajı döner. Pasif yapılınca açık pencere kapatılmaz, `AppLauncher.Forget` ile izleme
+   bırakılır. Ayar ekranındaki "Test et" pasif profilde de çalışır.
+7. **Ekran ayarı değişince** (`SystemEvents.DisplaySettingsChanged`, ör. dış ekran sonradan açıldı): takip edilen tüm
    pencereler yeniden yerleştirilir.
 
 ## Pencere yerleştirme kuralları (`WindowPlacer`)

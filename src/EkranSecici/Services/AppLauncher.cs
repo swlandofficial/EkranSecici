@@ -30,6 +30,8 @@ internal sealed partial class AppLauncher
         if (!_busy.Add(profile.Id)) return null;
         try
         {
+            if (!profile.Enabled) return $"'{profile.Name}' pasif. Başlatmak için önce aktif yapın.";
+
             if (IsRunning(profile))
             {
                 Place(profile, _windows[profile.Id]);
@@ -96,20 +98,20 @@ internal sealed partial class AppLauncher
     /// <summary>Takip edilen pencere doğru yerde değilse yerleştirir (bekçi ve ekran değişikliği için).</summary>
     public void EnsurePlaced(LaunchProfile profile)
     {
-        if (_busy.Contains(profile.Id)) return;
+        if (!profile.Enabled || _busy.Contains(profile.Id)) return;
         if (_windows.TryGetValue(profile.Id, out var hwnd) && IsWindow(hwnd)) Place(profile, hwnd);
     }
 
     /// <summary>"Her zaman üstte" profillerinde pencereyi en üst katmanda tutar (konumuna dokunmaz).</summary>
     public void EnsureTopMost(LaunchProfile profile)
     {
-        if (_busy.Contains(profile.Id)) return;
+        if (!profile.Enabled || _busy.Contains(profile.Id)) return;
         if (_windows.TryGetValue(profile.Id, out var hwnd) && IsWindow(hwnd)) WindowPlacer.SetTopMost(hwnd);
     }
 
     /// <summary>Pencere kapandıysa ve bekleme süresi dolduysa yeniden başlatılmalı mı?</summary>
     public bool ShouldRestart(LaunchProfile profile) =>
-        IsTracked(profile) && !IsRunning(profile) && !IsBusy(profile) &&
+        profile.Enabled && IsTracked(profile) && !IsRunning(profile) && !IsBusy(profile) &&
         (!_lastStart.TryGetValue(profile.Id, out var t) || DateTime.Now - t > RestartCooldown);
 
     public void Forget(Guid profileId)
