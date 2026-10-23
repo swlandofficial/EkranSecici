@@ -170,6 +170,10 @@ internal sealed class TrayApplicationContext : ApplicationContext
             {
                 _launcher.EnsurePlaced(p);
             }
+            else if (p.AlwaysOnTop)
+            {
+                _launcher.EnsureTopMost(p);
+            }
         }
     }
 

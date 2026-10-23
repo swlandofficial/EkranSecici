@@ -84,6 +84,7 @@ internal sealed partial class AppLauncher
             Place(profile, hwnd);
             await Task.Delay(2000);
             Place(profile, hwnd);
+            if (profile.AlwaysOnTop) WindowPlacer.BringToFront(hwnd, topMost: true);
             return null;
         }
         finally
@@ -97,6 +98,13 @@ internal sealed partial class AppLauncher
     {
         if (_busy.Contains(profile.Id)) return;
         if (_windows.TryGetValue(profile.Id, out var hwnd) && IsWindow(hwnd)) Place(profile, hwnd);
+    }
+
+    /// <summary>"Her zaman üstte" profillerinde pencereyi en üst katmanda tutar (konumuna dokunmaz).</summary>
+    public void EnsureTopMost(LaunchProfile profile)
+    {
+        if (_busy.Contains(profile.Id)) return;
+        if (_windows.TryGetValue(profile.Id, out var hwnd) && IsWindow(hwnd)) WindowPlacer.SetTopMost(hwnd);
     }
 
     /// <summary>Pencere kapandıysa ve bekleme süresi dolduysa yeniden başlatılmalı mı?</summary>

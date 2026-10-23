@@ -77,7 +77,10 @@ UI tamamen kodla kuruluyor (Designer dosyası yok). Yeni form eklerken aynı sti
    - Bulunan pencereyi `WindowPlacer.EnsurePlaced` ile yerleştirir; bazı programlar açıldıktan sonra kendi kayıtlı
      konumuna döndüğü için kısa süre sonra bir kez daha uygular.
 5. **Bekçi (her 5 sn):** `KeepOnMonitor` profillerinde pencere başka monitöre kaydıysa geri taşır;
-   `RestartIfClosed` profillerinde pencere kapandıysa (15 sn bekleme ile) yeniden başlatır.
+   `RestartIfClosed` profillerinde pencere kapandıysa (15 sn bekleme ile) yeniden başlatır;
+   `AlwaysOnTop` profillerinde `HWND_TOPMOST` her turda yeniden uygulanır (bayrak varken bile — başka en-üstte
+   pencereler sırayı değiştirebilir). (Yeniden) başlatılan `AlwaysOnTop` penceresi ayrıca öne getirilir ve odak
+   personelin penceresine iade edilir; aksi halde Windows yeni pencereyi arkada açabilir.
 6. **Ekran ayarı değişince** (`SystemEvents.DisplaySettingsChanged`, ör. dış ekran sonradan açıldı): takip edilen tüm
    pencereler yeniden yerleştirilir.
 

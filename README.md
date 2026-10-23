@@ -73,7 +73,7 @@ Profil seçenekleri:
 | Monitör | Hedef ekran. 1 = ana monitör, diğerleri soldan sağa. |
 | Pencere modu | Normal pencere / Ekranı kapla / Tam ekran |
 | F11 gönder | Tam ekranı programın kendi F11 kısayoluyla yapar (tarayıcılar). |
-| Her zaman üstte | Pencere diğer pencerelerin üstünde kalır. |
+| Her zaman üstte | Pencere diğer pencerelerin üstünde kalır; kapanıp yeniden açıldığında da en üste gelir. |
 | Windows açılışında otomatik başlat | Profil açılışta başlatılır. |
 | Monitörde ve modda tut | Pencere başka ekrana taşınırsa/küçültülürse geri getirilir. |
 | Kapanırsa yeniden başlat | Pencere kapanırsa birkaç saniye içinde yeniden açılır. |

@@ -34,10 +34,30 @@ internal static class WindowPlacer
                 break;
         }
 
-        if (profile.AlwaysOnTop && (GetWindowLong(hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST) == 0)
-        {
-            SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-        }
+        // Bayrak zaten olsa bile tekrar uygula: pencereyi "en üstte" katmanının da en üstüne taşır
+        // (başka bir en-üstte pencere veya programın kendisi sırayı değiştirmiş olabilir).
+        if (profile.AlwaysOnTop) SetTopMost(hwnd);
+    }
+
+    public static void SetTopMost(IntPtr hwnd) =>
+        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+    /// <summary>
+    /// Yeni açılan (ör. kapanıp yeniden başlatılan) pencereyi öne getirir. Windows, kullanıcı başka pencerede
+    /// çalışırken yeni pencereyi arkada açabilir; öne getirip odağı önceki pencereye iade eder.
+    /// </summary>
+    public static void BringToFront(IntPtr hwnd, bool topMost)
+    {
+        if (!IsWindow(hwnd)) return;
+        var previous = GetForegroundWindow();
+        ForceForeground(hwnd);
+        if (topMost) SetTopMost(hwnd);
+        RestoreFocus(previous, hwnd);
+    }
+
+    private static void RestoreFocus(IntPtr previous, IntPtr hwnd)
+    {
+        if (previous != IntPtr.Zero && previous != hwnd && IsWindow(previous)) ForceForeground(previous);
     }
 
     /// <summary>Hedef monitör yokken: personelin ekranını kapatmamak için ana monitörde normal pencere.</summary>
@@ -122,7 +142,7 @@ internal static class WindowPlacer
         Thread.Sleep(300);
 
         // Odağı personelin çalıştığı pencereye iade et.
-        if (previous != IntPtr.Zero && previous != hwnd && IsWindow(previous)) ForceForeground(previous);
+        RestoreFocus(previous, hwnd);
     }
 
     public static void ForceForeground(IntPtr hwnd)
