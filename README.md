@@ -27,6 +27,11 @@ Firefox'taki **hasta çağrı ekranı** tam ekran açık kalır. PC açılınca 
 Kendi sitenize olduğu gibi yükleyebilir veya GitHub Pages'te (*Settings → Pages → Branch: main, /docs*) yayınlayabilirsiniz.
 İndirme düğmesi `publish/EkranSecici.exe` dosyasına bağlanır.
 
+## Tanıtım videosu
+
+[`remotion/`](remotion/) klasöründe Remotion ile hazırlanan Türkçe seslendirmeli tanıtım videosu (yatay + dikey)
+ve YouTube kapak resmi bulunur. Ayrıntılar: [remotion/README.md](remotion/README.md).
+
 ## Kurulum
 
 1. [Releases](../../releases) sayfasından (veya GitHub Actions → *Build* → artifact'tan) `EkranSecici-Setup-x.y.z.exe`

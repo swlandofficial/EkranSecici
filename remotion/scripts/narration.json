@@ -1,0 +1,59 @@
+{
+  "_aciklama": "Seslendirme metni. 'text' altyazıda görünür; seslendirmeye pronunciations.json ile fonetik hali verilir. İsterseniz cümleye özel 'say' alanı yazın. 'pauseAfter' cümleden sonraki sessizlik (sn).",
+  "sections": [
+    {
+      "id": "intro",
+      "sentences": [
+        { "text": "Poliklinikte iki ekran var: biri personelin, diğeri bekleme salonundaki hasta çağrı ekranı." },
+        { "text": "Her sabah pencereleri yerine taşımakla mı uğraşıyorsunuz?" }
+      ]
+    },
+    {
+      "id": "reveal",
+      "sentences": [{ "text": "Ekran Seçici bu işi sizin yerinize yapar." }]
+    },
+    {
+      "id": "monitors",
+      "sentences": [
+        { "text": "Her program için hangi monitörde açılacağını seçin:", "pauseAfter": 0.2 },
+        { "text": "normal pencere, ekranı kapla ya da tam ekran." }
+      ]
+    },
+    {
+      "id": "autostart",
+      "sentences": [
+        { "text": "Bilgisayar açıldığında her şey kendiliğinden yerine geçer." },
+        { "text": "Dış ekran geç açılsa bile bekler, bağlanınca taşır." }
+      ]
+    },
+    {
+      "id": "watchdog",
+      "sentences": [
+        { "text": "Çağrı ekranı yanlışlıkla kapanırsa yeniden açılır,", "pauseAfter": 0.15 },
+        { "text": "başka ekrana kayarsa geri gelir,", "pauseAfter": 0.15 },
+        { "text": "her zaman en üstte kalır." }
+      ]
+    },
+    {
+      "id": "firefox",
+      "sentences": [
+        { "text": "Hazır Firefox şablonuyla çağrı ekranını tek tıkla kurun." },
+        { "text": "Kiosk modunda, personelin tarayıcısından bağımsız çalışır." }
+      ]
+    },
+    {
+      "id": "noadmin",
+      "sentences": [
+        { "text": "Yönetici şifresi gerekmez, ek kurulum gerekmez." },
+        { "text": "Domain'deki bilgisayarlarda bile kolayca kurulur." }
+      ]
+    },
+    {
+      "id": "outro",
+      "sentences": [
+        { "text": "Ekran Seçici'yi ücretsiz indirin." },
+        { "text": "Her program, doğru ekranda." }
+      ]
+    }
+  ]
+}

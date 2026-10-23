@@ -1,0 +1,27 @@
+{
+  "name": "ekransecici-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ekran Seçici tanıtım videosu (Remotion)",
+  "scripts": {
+    "studio": "remotion studio",
+    "voice": "python3 scripts/generate_voice.py",
+    "preview": "remotion render EkranSeciciYatay out/preview.mp4 --scale=0.5",
+    "render": "remotion render EkranSeciciYatay out/ekransecici-1080p.mp4",
+    "render:vertical": "remotion render EkranSeciciDikey out/ekransecici-dikey.mp4",
+    "thumbnail": "remotion still YoutubeKapak out/youtube-kapak.png",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "@remotion/google-fonts": "4.0.538",
+    "@remotion/transitions": "4.0.538",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.538"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}

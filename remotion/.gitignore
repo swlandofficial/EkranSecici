@@ -1,0 +1,7 @@
+node_modules/
+out/
+# Piper modelleri ve geçici ses dosyaları
+models/
+.voice-tmp/
+public/voice/
+.venv/
