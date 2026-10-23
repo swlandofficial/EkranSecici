@@ -65,6 +65,20 @@
   .brand img { width: 28px; height: 28px; }
   nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-size: 15px; }
   nav a:hover { color: var(--text); }
+  .right { display: flex; align-items: center; }
+  .theme-toggle {
+    margin-left: 20px; width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); display: grid; place-items: center; cursor: pointer; padding: 0;
+  }
+  .theme-toggle:hover { border-color: var(--brand); color: var(--brand-strong); }
+  .theme-toggle svg { width: 18px; height: 18px; }
+  .theme-toggle .sun { display: none; }
+  :root[data-theme="dark"] .theme-toggle .sun { display: block; }
+  :root[data-theme="dark"] .theme-toggle .moon { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .sun { display: block; }
+    :root:not([data-theme="light"]) .theme-toggle .moon { display: none; }
+  }
 
   .hero { padding: 64px 0 48px; }
   .hero .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
@@ -136,18 +150,31 @@
     .btn { width: 100%; justify-content: center; }
   }
 </style>
+<script>
+  // Kayıtlı tema seçimini sayfa çizilmeden uygula (yanıp sönmesin).
+  try {
+    var t = localStorage.getItem("ekransecici-theme");
+    if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#"><img src="data:image/png;base64,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" alt="">Ekran Seçici</a>
+    <div class="right">
     <nav>
       <a href="#ozellikler">Özellikler</a>
       <a href="#kurulum">Kurulum</a>
       <a href="#sss">SSS</a>
       <a href="#indir">İndir</a>
     </nav>
+    <button class="theme-toggle" type="button" aria-label="Açık / koyu tema" title="Açık / koyu tema">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    </div>
   </div>
 </header>
 
@@ -328,5 +355,15 @@
   </div>
 </footer>
 
+<script>
+  document.querySelector(".theme-toggle").addEventListener("click", function () {
+    var root = document.documentElement;
+    var current = root.getAttribute("data-theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = current === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("ekransecici-theme", next); } catch (e) {}
+  });
+</script>
 </body>
 </html>
