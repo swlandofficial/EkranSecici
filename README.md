@@ -21,6 +21,12 @@ Firefox'taki **hasta çağrı ekranı** tam ekran açık kalır. PC açılınca 
 - **Yönetici yetkisi gerektirmez:** `%APPDATA%\EkranSecici` klasörüne kurulur, domain'deki ve yetkisiz PC'lerde çalışır.
 - .NET kurulumu gerektirmez (runtime exe'nin içindedir).
 
+## Tanıtım ve indirme sayfası
+
+[`docs/index.html`](docs/index.html): tanıtım, özellikler ve indirme düğmesi içeren tek dosyalık sayfa.
+Kendi sitenize olduğu gibi yükleyebilir veya GitHub Pages'te (*Settings → Pages → Branch: main, /docs*) yayınlayabilirsiniz.
+İndirme düğmesi `publish/EkranSecici.exe` dosyasına bağlanır.
+
 ## Kurulum
 
 1. [Releases](../../releases) sayfasından (veya GitHub Actions → *Build* → artifact'tan) `EkranSecici-Setup-x.y.z.exe`

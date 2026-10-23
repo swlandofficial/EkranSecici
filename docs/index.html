@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ekran Seçici</title>
+<meta name="description" content="Çift monitörlü Windows bilgisayarlarda programları seçtiğiniz ekranda, seçtiğiniz modda ve açılışta otomatik açar. Hasta çağrı ekranları için ideal.">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<style>
+  :root {
+    --bg: #f7faf9;
+    --surface: #ffffff;
+    --text: #0f1f1d;
+    --muted: #4b5f5c;
+    --line: #dde7e5;
+    --brand: #0d9488;
+    --brand-strong: #0f766e;
+    --brand-soft: #ccfbf1;
+    --on-brand: #ffffff;
+    --screen-a: #94a3b8;
+    --screen-b: #2dd4bf;
+    --body-a: #374151;
+    --body-b: #115e59;
+    --shadow: 0 1px 2px rgba(15, 31, 29, .06), 0 8px 24px rgba(15, 31, 29, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1413;
+      --surface: #111e1c;
+      --text: #e6f2f0;
+      --muted: #9fb5b1;
+      --line: #1f322f;
+      --brand: #2dd4bf;
+      --brand-strong: #5eead4;
+      --brand-soft: #123a35;
+      --on-brand: #04201d;
+      --screen-a: #64748b;
+      --screen-b: #2dd4bf;
+      --body-a: #1f2937;
+      --body-b: #0f766e;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1413; --surface: #111e1c; --text: #e6f2f0; --muted: #9fb5b1; --line: #1f322f;
+    --brand: #2dd4bf; --brand-strong: #5eead4; --brand-soft: #123a35; --on-brand: #04201d;
+    --screen-a: #64748b; --screen-b: #2dd4bf; --body-a: #1f2937; --body-b: #0f766e;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: var(--brand-strong); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+  header.top { border-bottom: 1px solid var(--line); background: var(--surface); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); text-decoration: none; }
+  .brand img { width: 28px; height: 28px; }
+  nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-size: 15px; }
+  nav a:hover { color: var(--text); }
+
+  .hero { padding: 64px 0 48px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .eyebrow { display: inline-block; background: var(--brand-soft); color: var(--brand-strong); font-weight: 600;
+    font-size: 13px; padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; }
+  h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.15; margin: 0 0 16px; letter-spacing: -.02em; }
+  .lead { font-size: 18px; color: var(--muted); margin: 0 0 28px; max-width: 34em; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600;
+    padding: 14px 22px; border-radius: 10px; font-size: 16px; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--brand); color: var(--on-brand); box-shadow: var(--shadow); }
+  .btn-primary:hover { background: var(--brand-strong); }
+  .btn-ghost { border-color: var(--line); color: var(--text); background: var(--surface); }
+  .btn-ghost:hover { border-color: var(--brand); }
+  .btn svg { width: 20px; height: 20px; }
+  .meta { margin-top: 14px; font-size: 14px; color: var(--muted); }
+
+  .illus { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+  .illus svg { width: 100%; height: auto; display: block; }
+  .illus p { margin: 12px 0 0; text-align: center; font-size: 14px; color: var(--muted); }
+
+  section { padding: 56px 0; }
+  section.alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  h2 { font-size: 28px; margin: 0 0 8px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 32px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  section:not(.alt) .card { background: var(--surface); }
+  .card .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--brand-soft); color: var(--brand-strong);
+    display: grid; place-items: center; margin-bottom: 12px; }
+  .card .ic svg { width: 22px; height: 22px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 14px; }
+  ol.steps li { counter-increment: s; position: relative; padding: 16px 16px 16px 60px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 12px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 30px; height: 30px;
+    border-radius: 50%; background: var(--brand); color: var(--on-brand); font-weight: 700; display: grid; place-items: center; }
+  ol.steps strong { display: block; }
+  ol.steps span { color: var(--muted); font-size: 15px; }
+  code { font-family: Consolas, "Cascadia Mono", ui-monospace, monospace; font-size: .9em; background: var(--brand-soft);
+    padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  details { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--bg); margin-bottom: 10px; }
+  details summary { cursor: pointer; font-weight: 600; }
+  details p { margin: 10px 0 0; color: var(--muted); font-size: 15px; }
+  ul.req { padding-left: 20px; margin: 0; color: var(--muted); }
+  ul.req li { margin-bottom: 6px; }
+
+  .final { text-align: center; }
+  .final .cta { justify-content: center; }
+
+  footer { border-top: 1px solid var(--line); padding: 24px 0; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 860px) {
+    .hero .wrap, .two { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr 1fr; }
+    nav { display: none; }
+    .hero { padding-top: 40px; }
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAPFUlEQVR42u1da4yc1Xl+3nO+y8zszK5314g2BCMVEglH6g8MpGkSdmmxsEhtnEq7hBq7iEZridZRG5U0lDbjKaQEQ6JQIxSvIkvFbVoYFREbC4hRbatSuUSbH2lZQsOlhQQrMex9bt93znn745u9GM/ae52Zb+Y80vGsNOud75zzvM953/eceQ9gYWFhYWFhYWFhYWFhYWFhYWFhYWFhYdHKINvXlgdbkmf7nLYegYEB2Z5WMTAgkc9rALhkYCCtPU+0Det9n7mjg8YOHpwCAAwNuRgeDtuHANmsQC5nAMjuP971t2BzNwN+uygiMQy5EiB6RQfmkckjP3gRfX0OTp9WrU+AquV37rn9eum5Dwgpt5pypf28OwbIdcFBYJjN/okjT94//04E2ZJd/9Sn6NJrrkmxMEfI82/kYqnSon29uOuntQFAIpn4Pf/qq39S/ul/v4GBAYnRUW5NBaiudV27b9svU6ksF0sVEPkAAMPt5RQTRY3ZQEpmYyqanU3TR46MzdKEWs76Ae69666MUcV3QKIbzDRLdPJc0LkK2LLGT0RgpcFKV0eFQ0r4jqlU7pt44l8fnDWUlgyPuFIhFvCIIAAwjIFI+Lj0y7eBEl5VCVoYxkB0JDF58mVMnnwZsiMF1hogIgYSC3+1deNjOt/MKeFBJBKAMa2tAMZAJBMgxzlP7Agw7UGAmpbB0eS3OAHm+sgXVzpnSbYULx8AHASEZHs5/SuFWDyUnksfcoyaAcDj3d2hndqlwVls8vPVFOq2bbs6p6amWamg6ZVAa0VSOjz+y/HM2R5Jy9Iuil9AFDn3vLYE6OvLOvl8Tl3bt+Mm1/HvmQwr1xtfgvykiAObCUBXWdEYO2nNDFriEmaUimW8R4JAQqwNASLLz6ktN9x6i+u4x0hAaK1BMbIOAiCWaflGKbz/yk8jEsSkr0QEFQboufIK9Fx5BVQQrGienI/K/qf7dn5OuO4P2ShoxUqQkHEjwEqcV6NU7AigQwVeZURzjgJcddU2H0TfFEROyKwECScMQ6gwjDJLMQn/jSAA3nJHdL7FgwFrosyzBKB8Pq+3bLkpDcKnlQpZkJBhGOKyj1+Oyy7fhLBKguYPawgBa5wZewPKxGv5angUIKXDAEpE5BMRh2GIyy7fhM/ecCMKhQKkaP7zFIIEimEFz514E6gSYCnK5QgBFiJeCiAExCqf17lQboCIEIYhioUCSsUiRCwIQCiFwXKdaXxYLABhGCsCIAjghAF6V/HMzsU/hyCEmGtxIMByntMwwxcSuc/eCJerO2kxmH8DAMbgNR8YCQIkVuijtfVhydlESkI6+MZ1n4tlH/5x7Jc4/e5r6PB8qBUkhdr7tOyCJWBShUgJGRsF0MyQRJgJg1X5AZYAC5xAV4jYEICY4RCt2gkUdurbG5YAlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWlgAWLQN7KLQKxQzFHJtDobNHwA3YEmC1IABdMl5D4VRPA3cIZ1UUaGsCzFp7hQ0e/dXb8EjE6JtBDAHCjwsTSAoBs8JKIW2vAIIIATO+/au3wHEqH1itd5kQAikhYawCrG4sNzpeLJ/d8Or8AEuAjzhVNgy0sGFgy8KYqKZOG5SK5TWsFBrPdb3GlyZFRwoimQCMbm0CaAOZ7gB57vkkYG79WsGGGaFWUXkYZoAIrDUmT75ULaDc4uXimSE8F+W33gV57sJikgxQR0sTQLNBh5fAxzs34mdnf4GU50d1ZLXB5MmXq5Pf4oWjosoXINedVwEiAWOIGKcAAOPjZkkEmC0RQxS1OKRIfNfFzZ+8Fu9Onj2nlKroSLXV5YHMHP3DrMjzXF2pHJ38pyefr16opWsSgD9SJkkrhUq5jCCoQIhYlE5AuVzGJ7p/E5+/fDOee+snSPtJQJuoXWzMwGtVM1bWtBjmOheyJoc81zUqPJNKdt0+CRByudpLgON4rIEAgDHGUCKRwOhr/4U3fjYaI+mMnpOJAW3wCZdwZqOBknTxuScix/XdtUksaHCNqmOUSLh1GcaqJbM24DA4pkK660xxvDInkwtWCwDAli1D7sjIcHhd3637k8l0tlwuVIjIjxSEY1dMO1r2CBIEJYGJdI1NE5qTSiOEFIaNmugQDxshAgNTvWFl2eMuCdBg9JPr9ENpXc23EDNXCPQdJq4wM63k7y/9QcgI3xUw+qWxw//8o4XeQY0hmP05S7+99T+TSZV50nW9LwRBWRNRPYJmCZCocZnTmsglMUNc4MIwIYQLEsopBDtPvXr0+Fp8Ztfu2+6RqdQBLpZCEDnVkGRy/Il/2dBI13ARGzj3l/r6+pyy6HlaSme7kDJSgHXQLUb0d7VRMFqd9ziO663J517ogjxmBhszFqjKnpFTR49ftW2b/+amTashvQsg7CpP/Y1MJL7BpfIcAZjNlGb3t6aTySmMjxO6u9c/Hh0fN7PX5y4lEcQA6PTpfgPkdnym/w9vhqDfUWFomFmsj+VDA+iX0unXWmmKHCdiRkUF5e8waN3kUggBYzicKRe+N/ryj8YwMCDfzOdXd8Xo0BAwPBzSni/VJJFrTFi9w7cp7q9zahtMjgHgpVNPvwDghfV+iOv7dhaldPuNUQaAiLJ4XH7l5A//um4jsSA0aidcMA8wMDAg3367WwAjALasw8e/7wIfC0mcTddanq677vd7jblyqlQap2RyveRyBCMjI6p60TQsARagem+Qnh2otcaWLUMYGRkOr+/faWonodxwZKR55HJJjtb4OF0oXuYgmH2fFroojYLdDl4LLLxh7amnwsi/5ZqkTkQ3ms3dcIZsn9PIBEsj9wKoVLqwtWitmspaFrX6qpfds29fp/ryoOPs2qW0UMka3hVVyuXunl27HA4CcgB9NpefaTcFmJvM0dHIWmgRawESH7GWbHMpVjYrwIzOO7+0tedP7ngehbH/k4F8y0j9njDiq1yuAEQuAKomGtOGg9eN1O9x0nlXJeU7PXf+UfbSO+7oWCQsr9tk1D0ZsW3brs6JicAxZlpRyv+66yXvDcNyCJBDRGSYp0UpuNoYPa07M1QKf61HT5+eAbICaAqHjQAgs3t3jyT1nvC8ZJT6XaBTtbadF6ZUmSE6M1CTk7nJI0/mMDTkVEPEliQAAYy+vn5ZFj1PSyH7tNEGgGCGTwT/vBwNMEMAg2CEkEpXgjtf/Y+jx4EBCeQbG7JVr1/fsPv2+0TC+zsuVwIQ+UsYWz4nCyWEAZtp4aSu+PDw4el6O7x1lNQsbd486Jao+99cz9+uje4kog1E1EmC/FqEEUQZIuok0AYwbxS+98y1fTtuAvImIkFTY7HrbZsKon7WnzOXXBKkpOPsCINKCMCwMYbZmOqm/XmNOXqfmVkbVXal5wgSOwDw5s1oLAGGhxUA0nC+ZypBhXw/ER2eqN7ntrQmRCbtGOZ/+PDw4RkMDbn1JomonzVkxdmzXlErddT1fBeAICEEkRC0KObfl8JJhDpQhs1RADQ6Ct1wC89mafqJJ8aM4FvB+gWSNAFtJpjN1MUbTwH8Ac/M7E+w+zAArpKqZZ3ARX2AJfzP5vMBaji2Pfv2dVKhwFypLGlcZRCYs/nGhoENjQKWfCt5Ty9mSr8wTRYFnJsIyq+QkNk+B7nTGvHIdDaYdM2QB2Cmi/Rtua1tEa/BeuopWfNnixZH1eJTj2V/I3PwWz9IP5LdCAA4dMhthe7ZzaAlIllIFUAYoK6un2e++/e3YO/esJoKJkuAdhCCRJEYmAJoA1zxTOfjB7IABIgY2axjCdAecBAEDIZAV2Z/+pLUM53fzvYgl1NxVQJLgGW7rkQAiMcmQnKdL5hM5/9khh/5AxAxmEXcHERLgJU6hkQugkCT0r0geSz9+IGjGBwkDA7qOC0JtkLI6tRAQmuG1iw6UtszN//uc+bz1xwofOXeF8EsUJ/vVMRUARgEZpp/bdKG/QRm4kSZFl0SiAQXioqArcJ3n68uCSYOS0LjCEBgEPH8a7O2nAERJ6LTSRdSA4eLZQ2lKU5LQqM8V+r9/kNpLhSb3nPmRJKoXGJ4biZQ8nWSMgOtuWYJksg/AABDHSnBxpwwxXJTLwn1nYDIeeLe7z+UqZT4dUiRgTbr872zdXh2IkovecyYFSUTDmutQdg5PfSXz4JZIJ+PVKGdCdDzaLYzEMkz5DopaI3YfPV4ucWlDGtIQfA8wWF4bObkj7+IfF7j0CEXe/eGzdClBq5NFEJrjmqcmiZmwOwONmHZSiVIwhigXDZRlPCZ58yN1xwo7N37IrJZgf37Iz+jPZ1Ajo5FgZdzhKoBDfOvKwsVMRclkNgqDD1/Thq5wVGCTQTVL2fgcLGkAdBcGjmb7cHgoG7kzqIlQL0TR4CYSyN/rOvnmcceuqWR/oAlQGOI4CIMFcH0MPHTmccffqDju9+8dM5RtgRoCziohIFwPR9S3AcprgYA5PPCEqDVEX0PwlDvBs8EwbPu+//bVdh37ykAqHeOwBKg/lDwXAKRweT0/pmzpS+O5Q5ONSoasASon9UDzEye6zDEGDTvnLr7azkABswNyw5aAtQDhjWEMEgmyATqGH34609Of+Xrx3HokItctNnUOEekca5wWC2byvE4TkUAwV2B5StKVfcEjN4+82d/9SyA6Gj54GDD08ENIQAnkkRG9lJHErHZC2CAi8Wll5qf3xV02JgTphJGu4LzKWDdJLRuAB7d56flZX8BIXwoBYjmXYlmaxQS2Gfgq0TChzGLbwfPSn6tTaBs1kEup5qpf2391aTlIn3wWxMkRddFzgPEYhu48T7AoSF3fWoPrjG6uwnj45wJ3unkC20ILSb5TX42sHEE2DscxsLsq2cY3EezYSAvLvmmXDlX8olUM3fPngpedYhnQkolXdZag/X2mbu/Niv5EoODqtkf3xJgFd4hiJg2dLkcBCdMqfJw4c/vOxGX4+CWAKuDgue6UFpzoXj/9L+/en9cJN8SYHVBE4NZwfNcBo2RVnum//Se43GSfEuAlU59uchIJUG9PY75YOy4+KC0ZyqXG8OhQy6Iwrj2yxJgiQhS3R6BmccmHpj5oJRDLqeaJZ1rUQd0Pf5gd/qxB2+YCw1jXhjCYqWIcTEIi1W6AQvuBbCwaA38PzPs5biYU0sEAAAAAElFTkSuQmCC" alt="">Ekran Seçici</a>
+    <nav>
+      <a href="#ozellikler">Özellikler</a>
+      <a href="#kurulum">Kurulum</a>
+      <a href="#sss">SSS</a>
+      <a href="#indir">İndir</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Windows 10 / 11 · Ücretsiz</span>
+        <h1>Her program, doğru ekranda.</h1>
+        <p class="lead">
+          Ekran Seçici, çift monitörlü bilgisayarlarda seçtiğiniz programları <strong>istediğiniz monitörde</strong>,
+          <strong>istediğiniz modda</strong> açar ve bunu bilgisayar açılışında kendiliğinden yapar.
+          Personel kendi ekranında çalışırken dış ekranda yalnızca hasta çağrı ekranı açık kalır.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/swlandofficial/EkranSecici/raw/claude/beautiful-gates-j5yfz5/publish/EkranSecici.exe" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            Ekran Seçici'yi indir
+          </a>
+          <a class="btn btn-ghost" href="#kurulum">Nasıl kurulur?</a>
+        </div>
+        <p class="meta">EkranSecici.exe · yaklaşık 68 MB · Windows 64-bit · yönetici yetkisi gerekmez</p>
+      </div>
+
+      <div class="illus" aria-hidden="true">
+        <svg viewBox="0 0 440 220">
+          <!-- Monitör 1: personel -->
+          <rect x="10" y="20" width="190" height="130" rx="10" fill="var(--body-a)"/>
+          <rect x="20" y="30" width="170" height="110" rx="4" fill="var(--screen-a)"/>
+          <rect x="30" y="40" width="90" height="56" rx="3" fill="var(--surface)" opacity=".9"/>
+          <rect x="30" y="40" width="90" height="10" rx="3" fill="var(--body-a)" opacity=".6"/>
+          <rect x="96" y="70" width="84" height="60" rx="3" fill="var(--surface)" opacity=".75"/>
+          <rect x="96" y="70" width="84" height="10" rx="3" fill="var(--body-a)" opacity=".5"/>
+          <rect x="95" y="150" width="20" height="22" fill="var(--body-a)"/>
+          <rect x="65" y="172" width="80" height="8" rx="4" fill="var(--body-a)"/>
+          <text x="105" y="205" text-anchor="middle" font-size="13" fill="var(--muted)" font-family="Segoe UI, sans-serif">1 · Personel</text>
+          <!-- Monitör 2: çağrı ekranı -->
+          <rect x="240" y="10" width="190" height="140" rx="10" fill="var(--body-b)"/>
+          <rect x="250" y="20" width="170" height="120" rx="4" fill="var(--screen-b)"/>
+          <text x="335" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#04201d" font-family="Segoe UI, sans-serif">HASTA ÇAĞRI</text>
+          <text x="335" y="98" text-anchor="middle" font-size="34" font-weight="800" fill="#04201d" font-family="Segoe UI, sans-serif">A-104</text>
+          <text x="335" y="122" text-anchor="middle" font-size="12" fill="#04201d" font-family="Segoe UI, sans-serif">Poliklinik 3</text>
+          <rect x="325" y="150" width="20" height="22" fill="var(--body-b)"/>
+          <rect x="295" y="172" width="80" height="8" rx="4" fill="var(--body-b)"/>
+          <text x="335" y="205" text-anchor="middle" font-size="13" fill="var(--muted)" font-family="Segoe UI, sans-serif">2 · Bekleme salonu (tam ekran)</text>
+        </svg>
+        <p>Açılışta çağrı ekranı kendiliğinden 2. monitörde tam ekran açılır.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="alt" id="ozellikler">
+    <div class="wrap">
+      <h2>Özellikler</h2>
+      <p class="sub">Bir kez ayarlayın, her açılışta her şey yerli yerinde olsun.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="9" height="7" rx="1"/><rect x="13" y="4" width="9" height="7" rx="1"/><path d="M6 15v2M18 15v2M4 19h4M16 19h4"/></svg></div>
+          <h3>Monitör seçimi</h3>
+          <p>Her program için hedef ekranı seçin. "Monitörleri tanımla" her ekranda büyük numara gösterir.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></div>
+          <h3>Pencere modu</h3>
+          <p>Normal pencere, ekranı kapla ya da tam ekran. Tarayıcılar için kiosk ve F11 desteği.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg></div>
+          <h3>Açılışta otomatik</h3>
+          <p>Bilgisayar açılınca programlar kendiliğinden doğru ekranda açılır. Dış ekran geç açılırsa bekler.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></div>
+          <h3>Kapanırsa yeniden aç</h3>
+          <p>Çağrı ekranı yanlışlıkla kapanırsa birkaç saniye içinde yeniden açılır.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h3>Monitörde tut</h3>
+          <p>Pencere başka ekrana sürüklenirse geri gelir. Elle açılan programlar da yakalanır.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3>Yetki istemez</h3>
+          <p>Yönetici şifresi gerekmez; domain'deki ve yetkisiz bilgisayarlarda çalışır. .NET kurulumu gerekmez.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M22 2 12 12"/><path d="M16 2h6v6"/></svg></div>
+          <h3>Firefox çağrı şablonu</h3>
+          <p>Tek tıkla hasta çağrı ekranı: ayrı Firefox profili, kiosk modu, personelin tarayıcısından bağımsız.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Her zaman üstte</h3>
+          <p>Seçilen pencere diğer pencerelerin üstünde kalır; yeniden açıldığında da öne gelir.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="16" cy="12" r="3"/></svg></div>
+          <h3>Aktif / pasif profiller</h3>
+          <p>Profilleri silmeden devre dışı bırakın. Sağ alttaki simgeden tek tıkla yönetin.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kurulum">
+    <div class="wrap">
+      <h2>Kurulum</h2>
+      <p class="sub">Birkaç dakikada hazır. Yönetici yetkisi gerekmez.</p>
+      <ol class="steps">
+        <li><strong>İndirin</strong><span>Yukarıdaki düğmeyle <code>EkranSecici.exe</code> dosyasını indirin.</span></li>
+        <li><strong>Kalıcı klasöre taşıyın</strong><span>Dosyayı <code>%APPDATA%\EkranSecici</code> klasörüne koyun
+          (ör. <code>C:\Users\kullanici\AppData\Roaming\EkranSecici</code>). Gezgin adres çubuğuna <code>%APPDATA%</code> yazarak açabilirsiniz.</span></li>
+        <li><strong>Çalıştırın</strong><span>Windows "bilgisayarınız korundu" uyarısı gösterirse <em>Ek bilgi → Yine de çalıştır</em>'a tıklayın.
+          Program sağ alttaki simgede çalışmaya başlar.</span></li>
+        <li><strong>Profil ekleyin</strong><span><em>Yeni profil</em> → programı seçin (veya <em>Firefox hasta çağrı ekranı şablonu</em>),
+          monitörü ve pencere modunu belirleyin, <em>Test et</em> ile deneyip kaydedin.</span></li>
+        <li><strong>Bitti</strong><span>"Windows açılışında otomatik başlat" işaretliyse, bilgisayar her açıldığında programlarınız doğru ekranda açılır.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="alt" id="sss">
+    <div class="wrap two">
+      <div>
+        <h2>Sık sorulanlar</h2>
+        <details>
+          <summary>Dış ekran (TV) bilgisayardan sonra açılırsa ne olur?</summary>
+          <p>Ekran Seçici ekranın bağlanmasını bekler. Bekleme süresi dolarsa program ana ekranda normal pencere olarak açılır;
+            dış ekran bağlandığında kendiliğinden oraya taşınır.</p>
+        </details>
+        <details>
+          <summary>Personelin kendi Firefox'u etkilenir mi?</summary>
+          <p>Hayır. Çağrı ekranı ayrı bir Firefox profiliyle çalışır; personel kendi Firefox'unu açıp kapatsa da çağrı ekranı yerinde kalır.</p>
+        </details>
+        <details>
+          <summary>Ayarlar nerede saklanır? Başka bilgisayara aktarabilir miyim?</summary>
+          <p>Ayarlar <code>%APPDATA%\EkranSecici\config.json</code> dosyasındadır. Bu dosyayı diğer bilgisayarlara kopyalayarak aynı ayarları kullanabilirsiniz.</p>
+        </details>
+        <details>
+          <summary>Program pencereyi taşıyamıyor, neden?</summary>
+          <p>Hedef program yönetici olarak çalışıyorsa Windows taşımaya izin vermez; programı normal yetkiyle çalıştırın.
+            Ayrıntılar için <code>%APPDATA%\EkranSecici\logs</code> klasöründeki günlüğe bakın.</p>
+        </details>
+      </div>
+      <div>
+        <h2>Gereksinimler</h2>
+        <ul class="req">
+          <li>Windows 10 veya Windows 11 (64-bit)</li>
+          <li>En az iki monitör (tek monitörde de çalışır)</li>
+          <li>Yönetici yetkisi gerekmez</li>
+          <li>.NET kurulumu gerekmez (programın içindedir)</li>
+          <li>Kurumsal ağlarda AppLocker <code>AppData</code> altından çalıştırmayı engelliyorsa BT biriminin izin vermesi gerekir</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="indir">
+    <div class="wrap">
+      <h2>Hemen başlayın</h2>
+      <p class="sub">Ücretsiz indirin, birkaç dakikada kurun.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/swlandofficial/EkranSecici/raw/claude/beautiful-gates-j5yfz5/publish/EkranSecici.exe" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          EkranSecici.exe indir (68 MB)
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/swlandofficial/EkranSecici">GitHub'da görüntüle</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© SWLand · Ekran Seçici</span>
+    <span>Windows 10 / 11 için</span>
+  </div>
+</footer>
+
+</body>
+</html>
