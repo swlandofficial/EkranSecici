@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace EkranSecici.Models;
 
 public enum WindowMode
@@ -37,6 +39,17 @@ public sealed class LaunchProfile
     public bool KeepOnMonitor { get; set; } = true;
     /// <summary>Pencere kapanırsa programı yeniden başlat.</summary>
     public bool RestartIfClosed { get; set; }
+
+    /// <summary>
+    /// Program Ekran Seçici dışında (elle, kısayoldan) açılsa da penceresini yakalayıp hedef monitöre taşı.
+    /// Belirtilmemişse (null, ör. eski ayar dosyaları): Firefox şablonu gibi ayrı profil (-no-remote) kullananlar hariç açık
+    /// sayılır, böylece personelin kendi tarayıcı pencereleri taşınmaz.
+    /// </summary>
+    public bool? FollowExternalWindows { get; set; }
+
+    [JsonIgnore]
+    public bool FollowsExternalWindows =>
+        FollowExternalWindows ?? !Arguments.Contains("-no-remote", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Pencere sahibinin işlem adı (boşsa exe adından türetilir), ör. firefox.</summary>
     public string ProcessName { get; set; } = "";

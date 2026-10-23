@@ -81,10 +81,15 @@ UI tamamen kodla kuruluyor (Designer dosyası yok). Yeni form eklerken aynı sti
    `AlwaysOnTop` profillerinde `HWND_TOPMOST` her turda yeniden uygulanır (bayrak varken bile — başka en-üstte
    pencereler sırayı değiştirebilir). (Yeniden) başlatılan `AlwaysOnTop` penceresi ayrıca öne getirilir ve odak
    personelin penceresine iade edilir; aksi halde Windows yeni pencereyi arkada açabilir.
-6. **Pasif profiller** (`Enabled=false`): açılışta, "Tümünü başlat"ta, bekçide ve ekran değişikliğinde atlanır;
+6. **Dışarıdan açılan pencereler** (`FollowsExternalWindows`): Program elle/kısayoldan açılırsa da yakalanır.
+   `SetWinEventHook(EVENT_OBJECT_SHOW)` yeni pencere görününce 300 ms gecikmeli tarama tetikler; bekçi de her turda
+   tarar. Profilin izlenen açık penceresi yoksa, işlem adı (+ başlık filtresi) eşleşen ve başka profile ait olmayan
+   ilk pencere sahiplenilip yerleştirilir. `FollowExternalWindows` null ise (eski config) `-no-remote` içeren
+   profiller (Firefox şablonu) hariç açık sayılır — personelin kendi tarayıcı pencereleri taşınmamalı.
+7. **Pasif profiller** (`Enabled=false`): açılışta, "Tümünü başlat"ta, bekçide ve ekran değişikliğinde atlanır;
    `StartOrPlaceAsync` hata mesajı döner. Pasif yapılınca açık pencere kapatılmaz, `AppLauncher.Forget` ile izleme
    bırakılır. Ayar ekranındaki "Test et" pasif profilde de çalışır.
-7. **Ekran ayarı değişince** (`SystemEvents.DisplaySettingsChanged`, ör. dış ekran sonradan açıldı): takip edilen tüm
+8. **Ekran ayarı değişince** (`SystemEvents.DisplaySettingsChanged`, ör. dış ekran sonradan açıldı): takip edilen tüm
    pencereler yeniden yerleştirilir.
 
 ## Pencere yerleştirme kuralları (`WindowPlacer`)

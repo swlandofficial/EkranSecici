@@ -78,6 +78,7 @@ Profil seçenekleri:
 | Her zaman üstte | Pencere diğer pencerelerin üstünde kalır; kapanıp yeniden açıldığında da en üste gelir. |
 | Windows açılışında otomatik başlat | Profil açılışta başlatılır. |
 | Monitörde ve modda tut | Pencere başka ekrana taşınırsa/küçültülürse geri getirilir. |
+| Program elle açılsa da bu monitöre taşı | Program Ekran Seçici dışında (masaüstü kısayolu vb.) açılsa da penceresi yakalanıp hedef monitöre taşınır. Firefox şablonunda kapalıdır (personelin kendi Firefox pencereleri taşınmasın). |
 | Kapanırsa yeniden başlat | Pencere kapanırsa birkaç saniye içinde yeniden açılır. |
 | İşlem adı | Pencere farklı bir işleme aitse (ör. UWP'de `ApplicationFrameHost`). |
 | Başlık içerir | Yalnızca başlığı bu metni içeren pencere taşınır. |

@@ -102,6 +102,52 @@ internal sealed partial class AppLauncher
         if (_windows.TryGetValue(profile.Id, out var hwnd) && IsWindow(hwnd)) Place(profile, hwnd);
     }
 
+    /// <summary>
+    /// Ekran Seçici dışında açılmış pencereleri yakalar: profil için izlenen açık pencere yoksa, işlem adı (ve varsa
+    /// başlık filtresi) eşleşen, başka profile ait olmayan ilk pencereyi sahiplenip hedef monitöre yerleştirir.
+    /// </summary>
+    public void AdoptExternalWindows(IEnumerable<LaunchProfile> profiles)
+    {
+        List<WindowInfo>? windows = null;
+        foreach (var p in profiles)
+        {
+            if (!p.Enabled || !p.FollowsExternalWindows || _busy.Contains(p.Id) || IsRunning(p)) continue;
+            if (string.IsNullOrWhiteSpace(p.ExePath)) continue;
+
+            windows ??= WindowFinder.GetTopLevelWindows();
+            var owned = _windows.Values.ToHashSet();
+            var processName = p.EffectiveProcessName;
+            var hwnd = windows
+                .Where(w => !owned.Contains(w.Handle))
+                .Where(w => string.Equals(w.ProcessName, processName, StringComparison.OrdinalIgnoreCase))
+                .Where(w => TitleMatches(p, w.Title))
+                .Select(w => w.Handle)
+                .FirstOrDefault();
+            if (hwnd == IntPtr.Zero) continue;
+
+            _windows[p.Id] = hwnd;
+            Log.Info($"'{p.Name}' dışarıdan açılan penceresi yakalandı: \"{WindowFinder.GetTitle(hwnd)}\"");
+            _ = PlaceAdoptedAsync(p, hwnd);
+        }
+    }
+
+    private async Task PlaceAdoptedAsync(LaunchProfile profile, IntPtr hwnd)
+    {
+        _busy.Add(profile.Id);
+        try
+        {
+            Place(profile, hwnd);
+            // Program açıldıktan sonra kendi kayıtlı konumuna dönebilir: kısa süre sonra tekrar uygula.
+            await Task.Delay(1500);
+            Place(profile, hwnd);
+            if (profile.AlwaysOnTop) WindowPlacer.BringToFront(hwnd, topMost: true);
+        }
+        finally
+        {
+            _busy.Remove(profile.Id);
+        }
+    }
+
     /// <summary>"Her zaman üstte" profillerinde pencereyi en üst katmanda tutar (konumuna dokunmaz).</summary>
     public void EnsureTopMost(LaunchProfile profile)
     {

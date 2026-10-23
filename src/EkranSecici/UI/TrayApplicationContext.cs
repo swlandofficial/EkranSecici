@@ -1,4 +1,5 @@
 using EkranSecici.Models;
+using EkranSecici.Native;
 using EkranSecici.Services;
 using Microsoft.Win32;
 
@@ -17,6 +18,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly ToolStripMenuItem _profilesMenu = new("Profili başlat / konumla");
     private readonly System.Windows.Forms.Timer _watchdog = new() { Interval = 5000 };
     private readonly System.Windows.Forms.Timer _displayChangeDebounce = new() { Interval = 3000 };
+    private readonly System.Windows.Forms.Timer _windowShownDebounce = new() { Interval = 300 };
+    private readonly NativeMethods.WinEventDelegate _winEventProc; // GC toplamasın diye alanda tutulur
+    private readonly IntPtr _winEventHook;
     private bool _startupRunning;
 
     public TrayApplicationContext(bool autostart)
@@ -50,6 +54,16 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         _watchdog.Tick += (_, _) => WatchdogTick();
         _watchdog.Start();
+
+        // Yeni pencere görününce (program elle açıldıysa) hemen yakala; bekçi de 5 sn'de bir yedek olarak tarar.
+        _windowShownDebounce.Tick += (_, _) =>
+        {
+            _windowShownDebounce.Stop();
+            if (!_startupRunning) _launcher.AdoptExternalWindows(_store.Config.Profiles);
+        };
+        _winEventProc = OnWinEvent;
+        _winEventHook = NativeMethods.SetWinEventHook(NativeMethods.EVENT_OBJECT_SHOW, NativeMethods.EVENT_OBJECT_SHOW,
+            IntPtr.Zero, _winEventProc, 0, 0, NativeMethods.WINEVENT_OUTOFCONTEXT | NativeMethods.WINEVENT_SKIPOWNPROCESS);
 
         _displayChangeDebounce.Tick += (_, _) =>
         {
@@ -159,9 +173,17 @@ internal sealed class TrayApplicationContext : ApplicationContext
         }
     }
 
+    private void OnWinEvent(IntPtr hook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint thread, uint time)
+    {
+        if (idObject != NativeMethods.OBJID_WINDOW || idChild != 0 || hwnd == IntPtr.Zero) return;
+        _windowShownDebounce.Stop();
+        _windowShownDebounce.Start();
+    }
+
     private void WatchdogTick()
     {
         if (_startupRunning) return;
+        _launcher.AdoptExternalWindows(_store.Config.Profiles);
         foreach (var p in _store.Config.Profiles.Where(p => p.Enabled).ToList())
         {
             if (p.RestartIfClosed && _launcher.ShouldRestart(p))
@@ -206,6 +228,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     {
         Log.Info("Uygulama kapatılıyor");
         _watchdog.Stop();
+        if (_winEventHook != IntPtr.Zero) NativeMethods.UnhookWinEvent(_winEventHook);
         SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
         _tray.Visible = false;
         _form.AllowClose = true;
@@ -220,6 +243,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             _tray.Dispose();
             _watchdog.Dispose();
             _displayChangeDebounce.Dispose();
+            _windowShownDebounce.Dispose();
             _form.Dispose();
         }
         base.Dispose(disposing);

@@ -26,6 +26,7 @@ internal sealed class ProfileEditorForm : Form
     private readonly CheckBox _topMost = new() { Text = "Her zaman üstte", AutoSize = true };
     private readonly CheckBox _autoStart = new() { Text = "Windows açılışında otomatik başlat", AutoSize = true };
     private readonly CheckBox _keepOnMonitor = new() { Text = "Pencereyi seçili monitörde ve modda tut (kaydırılırsa geri getir)", AutoSize = true };
+    private readonly CheckBox _followExternal = new() { Text = "Program elle (Ekran Seçici dışında) açılsa da bu monitöre taşı", AutoSize = true };
     private readonly CheckBox _restart = new() { Text = "Kapanırsa yeniden başlat", AutoSize = true };
     private readonly TextBox _processName = new();
     private readonly TextBox _title = new();
@@ -90,6 +91,7 @@ internal sealed class ProfileEditorForm : Form
         AddRow(grid, "", _topMost);
         AddRow(grid, "", _autoStart);
         AddRow(grid, "", _keepOnMonitor);
+        AddRow(grid, "", _followExternal);
         AddRow(grid, "", _restart);
 
         var advanced = new Label { Text = "Gelişmiş (pencere bulma)", AutoSize = true, Font = new Font(Font, FontStyle.Bold), Margin = new Padding(3, 12, 3, 3) };
@@ -162,6 +164,7 @@ internal sealed class ProfileEditorForm : Form
         _autoStart.Checked = p.AutoStart;
         _keepOnMonitor.Checked = p.KeepOnMonitor;
         _restart.Checked = p.RestartIfClosed;
+        _followExternal.Checked = p.FollowsExternalWindows;
         _processName.Text = p.ProcessName;
         _title.Text = p.WindowTitleContains;
         _wait.Value = Math.Clamp(p.WindowWaitSeconds, (int)_wait.Minimum, (int)_wait.Maximum);
@@ -186,6 +189,7 @@ internal sealed class ProfileEditorForm : Form
         p.AutoStart = _autoStart.Checked;
         p.KeepOnMonitor = _keepOnMonitor.Checked;
         p.RestartIfClosed = _restart.Checked;
+        p.FollowExternalWindows = _followExternal.Checked;
         p.ProcessName = _processName.Text.Trim();
         p.WindowTitleContains = _title.Text.Trim();
         p.WindowWaitSeconds = (int)_wait.Value;
@@ -265,6 +269,7 @@ internal sealed class ProfileEditorForm : Form
         _autoStart.Checked = true;
         _keepOnMonitor.Checked = true;
         _restart.Checked = true;
+        _followExternal.Checked = false; // personelin kendi Firefox pencereleri taşınmasın
         if (SelectedMonitor() is { Primary: true })
         {
             var secondary = _monitor.Items.Cast<MonitorInfo>().FirstOrDefault(m => !m.Primary);
