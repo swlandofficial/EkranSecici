@@ -53,7 +53,7 @@ export const Intro: React.FC<SceneProps> = ({ sentences }) => {
           Her sabah <span style={{ color: colors.warning }}>aynı uğraş</span> mı?
         </div>
         <div style={{ opacity: enter, transform: `translateY(${(1 - enter) * 60}px)` }}>
-          <DualMonitors width={vertical ? 640 : 1400} stack={vertical} windows={windows} />
+          <DualMonitors width={vertical ? 580 : 1400} stack={vertical} windows={windows} />
         </div>
       </AbsoluteFill>
     </Backdrop>
