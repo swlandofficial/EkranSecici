@@ -25,7 +25,9 @@ Firefox'taki **hasta çağrı ekranı** tam ekran açık kalır. PC açılınca 
 
 [`docs/index.html`](docs/index.html): tanıtım, özellikler ve indirme düğmesi içeren tek dosyalık sayfa.
 Kendi sitenize olduğu gibi yükleyebilir veya GitHub Pages'te (*Settings → Pages → Branch: main, /docs*) yayınlayabilirsiniz.
-İndirme düğmesi `publish/EkranSecici.exe` dosyasına bağlanır.
+İndirme düğmeleri her zaman son sürümün kurulum dosyasına bağlanır:
+`https://github.com/swlandofficial/EkranSecici/releases/latest/download/EkranSecici-Setup.exe`
+(bu yüzden Release'e yüklenen dosyanın adı her sürümde aynen `EkranSecici-Setup.exe` olmalıdır).
 
 ## Tanıtım videosu
 
@@ -34,14 +36,18 @@ ve YouTube kapak resmi bulunur. Ayrıntılar: [remotion/README.md](remotion/READ
 
 ## Kurulum
 
-1. [Releases](../../releases) sayfasından (veya GitHub Actions → *Build* → artifact'tan) `EkranSecici-Setup-x.y.z.exe`
-   dosyasını indirin.
+1. Son sürümün kurulum dosyasını indirin:
+   [EkranSecici-Setup.exe](https://github.com/swlandofficial/EkranSecici/releases/latest/download/EkranSecici-Setup.exe)
+   ([tüm sürümler](https://github.com/swlandofficial/EkranSecici/releases)).
 2. Çalıştırın. Yönetici şifresi **istemez**; program şuraya kurulur:
    `C:\Users\<kullanıcı>\AppData\Roaming\EkranSecici`
 3. Kurulumda **"Windows açılışında otomatik başlat"** seçeneği işaretli kalsın.
 
 > Kurulum paketi istemiyorsanız `EkranSecici.exe`'yi tek başına da (taşınabilir) çalıştırabilirsiniz.
 > Ayarlar yine `%APPDATA%\EkranSecici\config.json` dosyasına yazılır.
+
+Program **Ayarlar → Uygulamalar** (veya Denetim Masası → Programlar ve Özellikler) listesinde *Ekran Seçici* olarak
+görünür ve oradan kaldırılabilir.
 
 Kurulum kullanıcı bazlıdır: aynı PC'de başka bir kullanıcı oturum açıyorsa o kullanıcı için de kurulmalıdır.
 
@@ -142,12 +148,33 @@ bir **arka plan (tepsi) uygulaması** olarak çalışır — hizmet gibi görün
 Gereksinim: .NET 8 SDK, (kurulum paketi için) [Inno Setup 6](https://jrsoftware.org/isinfo.php).
 
 ```powershell
-# Windows'ta derleme + kurulum paketi -> dist\EkranSecici-Setup-<sürüm>.exe
-./build.ps1 -Version 1.0.0
+# Inno Setup bir kez kurulur
+winget install JRSoftware.InnoSetup
+
+# Derleme + kurulum paketi -> build\installer\EkranSecici-Setup.exe
+powershell -ExecutionPolicy Bypass -File installer\windows\build.ps1
+# Sürümü elle vermek için (varsayılan: csproj'daki <Version>)
+powershell -ExecutionPolicy Bypass -File installer\windows\build.ps1 -Version 1.1.0
 
 # Yalnızca derleme
 dotnet build -c Release
 ```
+
+### Sürüm yayınlama (GitHub Releases)
+
+Sayfadaki indirme düğmeleri Release olmadan **404** verir. İlk sürüm için:
+
+1. `winget install JRSoftware.InnoSetup` ile Inno Setup'ı kurun.
+2. Repo klasöründe `powershell -ExecutionPolicy Bypass -File installer\windows\build.ps1` çalıştırın.
+3. Oluşan `build\installer\EkranSecici-Setup.exe` dosyasını GitHub'da **Releases → Draft a new release** ile
+   yükleyin. Etiket `v1.0.0` olsun, dosya adı aynen `EkranSecici-Setup.exe` kalmalı.
+4. **Publish release** deyin.
+
+Alternatif (otomatik): `git tag v1.0.0 && git push origin v1.0.0` — GitHub Actions kurulum paketini Windows'ta
+derleyip aynı adla Release'e ekler.
+
+Yeni sürümde `src/EkranSecici/EkranSecici.csproj` içindeki `<Version>` değerini artırın ve aynı adımları yeni etiketle
+(`v1.1.0` …) tekrarlayın.
 
 - `main`'e her push'ta GitHub Actions kurulum paketini artifact olarak üretir.
 - `v1.2.3` biçiminde bir etiket push'landığında kurulum paketi GitHub Release'e eklenir.

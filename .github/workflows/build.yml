@@ -24,7 +24,8 @@ jobs:
         id: ver
         shell: pwsh
         run: |
-          if ("${{ github.ref_type }}" -eq "tag") { $v = "${{ github.ref_name }}".TrimStart("v") } else { $v = "1.0.${{ github.run_number }}" }
+          if ("${{ github.ref_type }}" -eq "tag") { $v = "${{ github.ref_name }}".TrimStart("v") }
+          else { $v = ([xml](Get-Content src/EkranSecici/EkranSecici.csproj -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1 }
           "version=$v" >> $env:GITHUB_OUTPUT
 
       - name: Inno Setup kur
@@ -34,17 +35,15 @@ jobs:
 
       - name: Derle ve paketle
         shell: pwsh
-        run: ./build.ps1 -Version ${{ steps.ver.outputs.version }}
+        run: ./installer/windows/build.ps1 -Version ${{ steps.ver.outputs.version }}
 
       - uses: actions/upload-artifact@v4
         with:
           name: EkranSecici-${{ steps.ver.outputs.version }}
-          path: |
-            dist/*.exe
-            publish/EkranSecici.exe
+          path: build/installer/EkranSecici-Setup.exe
 
       - name: Release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.exe
+          files: build/installer/EkranSecici-Setup.exe

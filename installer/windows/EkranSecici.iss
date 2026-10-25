@@ -1,12 +1,14 @@
 ﻿; Ekran Seçici — Inno Setup betiği
 ; Yönetici yetkisi İSTEMEZ: %APPDATA%\EkranSecici klasörüne, yalnızca o kullanıcı için kurar.
-; Derleme: iscc /DAppVersion=1.0.0 installer\EkranSecici.iss   (önce publish klasörü oluşturulmalı)
+; Derleme: powershell -ExecutionPolicy Bypass -File installer\windows\build.ps1
+;          (publish + bu betik -> build\installer\EkranSecici-Setup.exe)
+; Kurulum "Programlar ve Özellikler" / "Ayarlar > Uygulamalar" listesine kullanıcı bazında (HKCU) eklenir.
 
 #ifndef AppVersion
   #define AppVersion "1.0.0"
 #endif
 #ifndef PublishDir
-  #define PublishDir "..\publish"
+  #define PublishDir "..\..\build\publish"
 #endif
 
 #define AppName "Ekran Seçici"
@@ -18,14 +20,22 @@ AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 AppPublisher=SWLand
+AppPublisherURL=https://swlandofficial.github.io/EkranSecici/
+AppSupportURL=https://github.com/swlandofficial/EkranSecici/issues
+AppUpdatesURL=https://github.com/swlandofficial/EkranSecici/releases/latest
+AppComments=Programları seçilen monitörde ve pencere modunda otomatik açar.
+VersionInfoVersion={#AppVersion}
+VersionInfoProductName={#AppName}
+VersionInfoDescription={#AppName} Kurulum
 DefaultDirName={userappdata}\EkranSecici
 DisableDirPage=yes
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
-OutputDir=..\dist
-OutputBaseFilename=EkranSecici-Setup-{#AppVersion}
-SetupIconFile=..\src\EkranSecici\Resources\app.ico
+; Sabit dosya adı: Releases'teki "latest/download/EkranSecici-Setup.exe" bağlantısı her sürümde çalışsın.
+OutputDir=..\..\build\installer
+OutputBaseFilename=EkranSecici-Setup
+SetupIconFile=..\..\src\EkranSecici\Resources\app.ico
 UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
 Compression=lzma2/max
@@ -83,6 +93,10 @@ end;
 // Kaldırırken ayarları silmek isteyip istemediğini sor.
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
+  // Otomatik başlatma kaydını her durumda sil (uygulama ayarlarından da açılmış olabilir).
+  if CurUninstallStep = usUninstall then
+    RegDeleteValue(HKEY_CURRENT_USER, 'Software\Microsoft\Windows\CurrentVersion\Run', 'EkranSecici');
+
   if CurUninstallStep = usPostUninstall then
   begin
     if DirExists(ExpandConstant('{app}')) and

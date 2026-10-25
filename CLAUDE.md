@@ -19,7 +19,7 @@ monitörde açılmalıdır.
 | **Gerçek Windows Hizmeti DEĞİL, kullanıcı oturumunda arka plan (tepsi) işlemi** | Windows Hizmetleri *Session 0*'da çalışır, masaüstüne pencere açamaz/taşıyamaz ve kurulumu yönetici yetkisi ister. Pencere yönetimi ancak kullanıcının oturumunda çalışan bir işlemle yapılabilir. "Hizmet gibi" davranış: HKCU `Run` anahtarıyla oturum açılışında `--autostart` ile başlar, görev çubuğunda görünmez, sağ altta ikon olarak yaşar. |
 | **Kurulum yeri: `%APPDATA%\EkranSecici`** (ör. `C:\Users\selcukdogan\AppData\Roaming\EkranSecici`) | Yönetici yetkisi olmayan ve domain'deki PC'lerde kurulabilsin. Hiçbir adım admin istemez (`PrivilegesRequired=lowest`, HKCU kayıtları, kullanıcı Başlat menüsü). |
 | **Self-contained, tek dosya exe (win-x64)** | Hedef makinede .NET Runtime kurulu olmayabilir ve kullanıcı kuramaz (admin ister). Runtime exe'nin içinde gelir. |
-| **Kurulum paketi: Inno Setup** (`installer/EkranSecici.iss`) | Per-user kurulum, Türkçe sihirbaz, kaldırma kaydı (HKCU), otomatik başlatma seçeneği. |
+| **Kurulum paketi: Inno Setup** (`installer/windows/EkranSecici.iss`) | Per-user kurulum, Türkçe sihirbaz, "Uygulamalar / Programlar ve Özellikler"de kaldırma kaydı (HKCU), otomatik başlatma seçeneği. Çıktı adı sabit `EkranSecici-Setup.exe` (sürüm numarası yok) — sayfadaki `releases/latest/download/EkranSecici-Setup.exe` bağlantısı buna dayanır. |
 | **Per-Monitor V2 DPI farkındalığı** | Farklı ölçekli monitörlerde (ör. %100 + %150) koordinatların fiziksel piksel olması ve pencerenin doğru boyutlanması için. |
 | **Ayarlar JSON** (`%APPDATA%\EkranSecici\config.json`) | Elle düzenlenebilir, yedeklenebilir, başka PC'ye kopyalanabilir. |
 
@@ -51,8 +51,11 @@ src/EkranSecici/
     MonitorIdentifyForm.cs    # Her monitörde büyük numara gösterir
     AppIcons.cs               # Gömülü ikonun yüklenmesi
   Resources/app.ico         # tools/make_icon.py ile üretilir
-installer/EkranSecici.iss   # Inno Setup betiği (per-user, Türkçe)
-build.ps1                   # Windows'ta yerel derleme + kurulum paketi
+installer/windows/
+  EkranSecici.iss           # Inno Setup betiği (per-user, Türkçe)
+  build.ps1                 # publish (build\publish) + kurulum paketi (build\installer\EkranSecici-Setup.exe)
+docs/index.html             # Tanıtım/indirme sayfası (GitHub Pages); indirme = son Release'in EkranSecici-Setup.exe'si
+remotion/                   # Tanıtım videosu (ayrı README)
 .github/workflows/build.yml # CI: publish + Inno Setup -> EkranSecici-Setup.exe (artifact / release)
 tools/make_icon.py          # İkon üretici (Pillow)
 ```
@@ -119,22 +122,18 @@ UI tamamen kodla kuruluyor (Designer dosyası yok). Yeni form eklerken aynı sti
 
 ## Derleme
 
-Windows'ta:
+Windows'ta (Inno Setup: `winget install JRSoftware.InnoSetup`):
 ```powershell
-./build.ps1              # publish + (Inno Setup kuruluysa) dist\EkranSecici-Setup-<sürüm>.exe
-./build.ps1 -Version 1.2.0
+powershell -ExecutionPolicy Bypass -File installer\windows\build.ps1               # sürüm = csproj <Version>
+powershell -ExecutionPolicy Bypass -File installer\windows\build.ps1 -Version 1.2.0
 ```
-Elle:
-```bash
-dotnet publish src/EkranSecici/EkranSecici.csproj -c Release -r win-x64 --self-contained true \
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true \
-  -o publish
-iscc /DAppVersion=1.0.0 installer/EkranSecici.iss
-```
+Çıktılar `build/` altında (git dışı): `build\publish\EkranSecici.exe`, `build\installer\EkranSecici-Setup.exe`.
+
 Linux/macOS'ta derleme doğrulaması: `dotnet build -c Release` (csproj'da `EnableWindowsTargeting=true` var);
 çalıştırma yalnızca Windows'ta mümkündür.
 
-CI: `main`'e push ve `v*` etiketlerinde GitHub Actions kurulum paketini üretir; etikette Release'e ekler.
+**Sürüm yayınlama:** `EkranSecici-Setup.exe` GitHub Releases'e `vX.Y.Z` etiketiyle, dosya adı değiştirilmeden yüklenir
+(elle veya `v*` etiketi push'lanınca CI otomatik). CI ayrıca `main`'e her push'ta kurulum paketini artifact olarak üretir.
 
 ## Kodlama kuralları
 
